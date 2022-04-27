@@ -1879,287 +1879,287 @@ p.polyA_dist_subcat.s2 <- ggplot(data.s2, aes(x=polyA_dist, color=subcategory)) 
 }
 
 ### Bad quality control attributes
-if (nrow(data.junction) > 0){
-  t3.data.sets=list()
-  t3.list=list()
-  # (Fran) ToDo: USE COVERAGE DATA LATER
-  # for FSM, ISM, NIC, and NNC, plot the percentage of RTS and non-canonical junction
-  x <- filter(data.class, structural_category %in% c("FSM", "ISM", "NIC", "NNC" ) & exons > 1)
+# if (nrow(data.junction) > 0){
+#   t3.data.sets=list()
+#   t3.list=list()
+#   # (Fran) ToDo: USE COVERAGE DATA LATER
+#   # for FSM, ISM, NIC, and NNC, plot the percentage of RTS and non-canonical junction
+#   x <- filter(data.class, structural_category %in% c("FSM", "ISM", "NIC", "NNC" ) & exons > 1)
   
-  t1.RTS <- group_by(x, structural_category, RTS_stage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-  t2.RTS <- group_by(x, structural_category) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-  t3.RTS <- merge(t1.RTS, t2.RTS, by="structural_category")
-  t3.RTS <- t3.RTS[-which(t3.RTS$structural_category=="ISM"),]
-  t3.RTS$perc <- t3.RTS$count.x / t3.RTS$count.y * 100
-  t3.RTS <- subset(t3.RTS, RTS_stage=='TRUE');
-  n_t3.RTS <- dim(t3.RTS)[1];
-  if (n_t3.RTS > 0) {
-	  t3.RTS$Var <- "RT switching"
-  }
+#   t1.RTS <- group_by(x, structural_category, RTS_stage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#   t2.RTS <- group_by(x, structural_category) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#   t3.RTS <- merge(t1.RTS, t2.RTS, by="structural_category")
+#   t3.RTS <- t3.RTS[-which(t3.RTS$structural_category=="ISM"),]
+#   t3.RTS$perc <- t3.RTS$count.x / t3.RTS$count.y * 100
+#   t3.RTS <- subset(t3.RTS, RTS_stage=='TRUE');
+#   n_t3.RTS <- dim(t3.RTS)[1];
+#   if (n_t3.RTS > 0) {
+# 	  t3.RTS$Var <- "RT switching"
+#   }
 
-  t1.SJ <- group_by(x, structural_category, all_canonical) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-  t3.SJ <- merge(t1.SJ, t2.RTS, by="structural_category")
-  t3.SJ$perc <- t3.SJ$count.x / t3.SJ$count.y * 100
-  t3.a.SJ <- subset(t3.SJ, all_canonical=='Canonical');
-  t3.SJ <- subset(t3.SJ, all_canonical=='Non-canonical');
-  n_t3.SJ <- dim(t3.SJ)[1];
-  if (n_t3.SJ > 0) {
-    t3.SJ$Var <- "Non-canonical"
-    t3.a.SJ$Var <- 'Canonical'
-  }
+#   t1.SJ <- group_by(x, structural_category, all_canonical) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#   t3.SJ <- merge(t1.SJ, t2.RTS, by="structural_category")
+#   t3.SJ$perc <- t3.SJ$count.x / t3.SJ$count.y * 100
+#   t3.a.SJ <- subset(t3.SJ, all_canonical=='Canonical');
+#   t3.SJ <- subset(t3.SJ, all_canonical=='Non-canonical');
+#   n_t3.SJ <- dim(t3.SJ)[1];
+#   if (n_t3.SJ > 0) {
+#     t3.SJ$Var <- "Non-canonical"
+#     t3.a.SJ$Var <- 'Canonical'
+#   }
   
 
-  if (!all(is.na(x$predicted_NMD))){
-    x[which(x$predicted_NMD=="TRUE"),"predicted_NMD"]="Predicted NMD"
-    x[which(x$predicted_NMD=="FALSE"),"predicted_NMD"]="Not NMD predicted"
-    t1.NMD <- group_by(x, structural_category, predicted_NMD) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-    t3.NMD <- merge(t1.NMD, t2.RTS, by="structural_category")
-    t3.NMD$perc <- t3.NMD$count.x / t3.NMD$count.y * 100
-    t3.NMD <- subset(t3.NMD, predicted_NMD=='Predicted NMD');
-    t3.NMD$Var=t3.NMD$predicted_NMD
-  }
-  if (!all(is.na(x$min_cov))){
-    x[which(x$min_cov==0),"Coverage_SJ"]="Not Coverage SJ"
-    x[which(x$min_cov>0),"Coverage_SJ"]="Coverage SJ"
-    t1.Cov <- group_by(x, structural_category, Coverage_SJ) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-    t3.Cov <- merge(t1.Cov, t2.RTS, by="structural_category")
-    t3.Cov$perc <- t3.Cov$count.x / t3.Cov$count.y * 100
-    t3.a.Cov <- subset(t3.Cov, Coverage_SJ=='Coverage SJ');
-    t3.Cov <- subset(t3.Cov, Coverage_SJ=='Not Coverage SJ');
-    t3.Cov$Var=t3.Cov$Coverage_SJ
-    t3.a.Cov$Var=t3.a.Cov$Coverage_SJ
-    t3.data.sets[[length(t3.data.sets) + 1]]=x$min_cov
-    t3.list[[length(t3.list) + 1]]=t3.a.Cov
-  }
+#   if (!all(is.na(x$predicted_NMD))){
+#     x[which(x$predicted_NMD=="TRUE"),"predicted_NMD"]="Predicted NMD"
+#     x[which(x$predicted_NMD=="FALSE"),"predicted_NMD"]="Not NMD predicted"
+#     t1.NMD <- group_by(x, structural_category, predicted_NMD) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#     t3.NMD <- merge(t1.NMD, t2.RTS, by="structural_category")
+#     t3.NMD$perc <- t3.NMD$count.x / t3.NMD$count.y * 100
+#     t3.NMD <- subset(t3.NMD, predicted_NMD=='Predicted NMD');
+#     t3.NMD$Var=t3.NMD$predicted_NMD
+#   }
+#   if (!all(is.na(x$min_cov))){
+#     x[which(x$min_cov==0),"Coverage_SJ"]="Not Coverage SJ"
+#     x[which(x$min_cov>0),"Coverage_SJ"]="Coverage SJ"
+#     t1.Cov <- group_by(x, structural_category, Coverage_SJ) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#     t3.Cov <- merge(t1.Cov, t2.RTS, by="structural_category")
+#     t3.Cov$perc <- t3.Cov$count.x / t3.Cov$count.y * 100
+#     t3.a.Cov <- subset(t3.Cov, Coverage_SJ=='Coverage SJ');
+#     t3.Cov <- subset(t3.Cov, Coverage_SJ=='Not Coverage SJ');
+#     t3.Cov$Var=t3.Cov$Coverage_SJ
+#     t3.a.Cov$Var=t3.a.Cov$Coverage_SJ
+#     t3.data.sets[[length(t3.data.sets) + 1]]=x$min_cov
+#     t3.list[[length(t3.list) + 1]]=t3.a.Cov
+#   }
   
-  if (!all(is.na(x$within_cage_peak))){
-    x[which(x$within_cage_peak=='False'),"Coverage_Cage"]="Not Coverage Cage"
-    x[which(x$within_cage_peak=='True'),"Coverage_Cage"]="Coverage Cage"
-    t1.Cage <- group_by(x, structural_category, Coverage_Cage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-    t3.Cage <- merge(t1.Cage, t2.RTS, by="structural_category")
-    t3.Cage$perc <- t3.Cage$count.x / t3.Cage$count.y * 100
-    t3.Cage <- subset(t3.Cage, Coverage_Cage=='Coverage Cage');
-    t3.Cage$Var=t3.Cage$Coverage_Cage
-    t3.data.sets[[length(t3.data.sets) + 1]]=data.class$dist_to_cage_peak
-    t3.list[[length(t3.list) + 1]]=t3.Cage
-    p28.a.Cage <- ggplot(t3.Cage, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[2] ,color="black") +
-      geom_text(label=paste(round(t3.Cage$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("CAGE Support\n\n") +
-      theme(legend.title = element_blank())
-  }
-  if (!all(is.na(data.class$polyA_motif))) {
-    x[which(is.na(x$polyA_motif)),"Coverage_PolyA"]="Not Coverage PolyA"
-    x[which(!is.na(x$polyA_motif)),"Coverage_PolyA"]="Coverage PolyA"
-    t1.PolyA <- group_by(x, structural_category, Coverage_PolyA) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-    t3.PolyA <- merge(t1.PolyA, t2.RTS, by="structural_category")
-    t3.PolyA$perc <- t3.PolyA$count.x / t3.PolyA$count.y * 100
-    t3.PolyA <- subset(t3.PolyA, Coverage_PolyA=='Coverage PolyA');
-    t3.PolyA$Var=t3.PolyA$Coverage_PolyA
-    t3.data.sets[[length(t3.data.sets) + 1]]=data.class$polyA_motif
-    t3.list[[length(t3.list) + 1]]=t3.PolyA
-    p28.a.polyA <- ggplot(t3.PolyA, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[3] ,color="black") +
-      geom_text(label=paste(round(t3.PolyA$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("PolyA Support\n\n") +
-      guides(fill = guide_legend(title = "QC Attributes") )
-  }
+#   if (!all(is.na(x$within_cage_peak))){
+#     x[which(x$within_cage_peak=='False'),"Coverage_Cage"]="Not Coverage Cage"
+#     x[which(x$within_cage_peak=='True'),"Coverage_Cage"]="Coverage Cage"
+#     t1.Cage <- group_by(x, structural_category, Coverage_Cage) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#     t3.Cage <- merge(t1.Cage, t2.RTS, by="structural_category")
+#     t3.Cage$perc <- t3.Cage$count.x / t3.Cage$count.y * 100
+#     t3.Cage <- subset(t3.Cage, Coverage_Cage=='Coverage Cage');
+#     t3.Cage$Var=t3.Cage$Coverage_Cage
+#     t3.data.sets[[length(t3.data.sets) + 1]]=data.class$dist_to_cage_peak
+#     t3.list[[length(t3.list) + 1]]=t3.Cage
+#     p28.a.Cage <- ggplot(t3.Cage, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[2] ,color="black") +
+#       geom_text(label=paste(round(t3.Cage$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("CAGE Support\n\n") +
+#       theme(legend.title = element_blank())
+#   }
+#   if (!all(is.na(data.class$polyA_motif))) {
+#     x[which(is.na(x$polyA_motif)),"Coverage_PolyA"]="Not Coverage PolyA"
+#     x[which(!is.na(x$polyA_motif)),"Coverage_PolyA"]="Coverage PolyA"
+#     t1.PolyA <- group_by(x, structural_category, Coverage_PolyA) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#     t3.PolyA <- merge(t1.PolyA, t2.RTS, by="structural_category")
+#     t3.PolyA$perc <- t3.PolyA$count.x / t3.PolyA$count.y * 100
+#     t3.PolyA <- subset(t3.PolyA, Coverage_PolyA=='Coverage PolyA');
+#     t3.PolyA$Var=t3.PolyA$Coverage_PolyA
+#     t3.data.sets[[length(t3.data.sets) + 1]]=data.class$polyA_motif
+#     t3.list[[length(t3.list) + 1]]=t3.PolyA
+#     p28.a.polyA <- ggplot(t3.PolyA, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[3] ,color="black") +
+#       geom_text(label=paste(round(t3.PolyA$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("PolyA Support\n\n") +
+#       guides(fill = guide_legend(title = "QC Attributes") )
+#   }
   
-  # x[which(x$diff_to_gene_TSS<=50),"Annotation"]="Annotated"
-  # x[which(x$diff_to_gene_TSS>50),"Annotation"]="Not annotated"
-  # t1.annot <- group_by(x, structural_category, Annotation) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
-  # t3.annot <- merge(t1.annot, t2.RTS, by="structural_category")
-  # t3.annot$perc <- t3.annot$count.x / t3.annot$count.y * 100
-  # t3.annot <- subset(t3.annot, Annotation=='Annotated');
-  # t3.annot$Var=t3.annot$Annotation
-  # p28.a.annot <- ggplot(t3.annot, aes(x=structural_category, y=perc)) +
-  #   geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[6] ,color="black") +
-  #   geom_text(label=paste(round(t3.annot$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
-  #   scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-  #   ylab("Isoforms, %") +
-  #   xlab("") +
-  #   mytheme +
-  #   theme(legend.position="bottom", axis.title.x = element_blank()) +
-  #   ggtitle("Annotation Support\n\n") 
-  #p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
-  #  geom_col(position='dodge', width = 0.7,  size=0.3, fill='lightblue', color="black") +
-  #  geom_text(label=paste(round(t3.SJ$perc, 1),"%",sep=''), nudge_y=0.5) +
-  #  scale_fill_manual(values = myPalette[11]) +
-  #  ylab("Isoforms, %") +
-  #  xlab("") +
-  #  mytheme +
-  #  theme(legend.position="bottom", axis.title.x = element_blank()) +
-  #  ggtitle("Incidence of Non-Canonical Junctions\n\n") +
-  #  guides(fill = guide_legend(title = "QC Attributes") )
+#   # x[which(x$diff_to_gene_TSS<=50),"Annotation"]="Annotated"
+#   # x[which(x$diff_to_gene_TSS>50),"Annotation"]="Not annotated"
+#   # t1.annot <- group_by(x, structural_category, Annotation) %>% dplyr::summarise(count=dplyr::n(), .groups = 'drop')
+#   # t3.annot <- merge(t1.annot, t2.RTS, by="structural_category")
+#   # t3.annot$perc <- t3.annot$count.x / t3.annot$count.y * 100
+#   # t3.annot <- subset(t3.annot, Annotation=='Annotated');
+#   # t3.annot$Var=t3.annot$Annotation
+#   # p28.a.annot <- ggplot(t3.annot, aes(x=structural_category, y=perc)) +
+#   #   geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[6] ,color="black") +
+#   #   geom_text(label=paste(round(t3.annot$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
+#   #   scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#   #   ylab("Isoforms, %") +
+#   #   xlab("") +
+#   #   mytheme +
+#   #   theme(legend.position="bottom", axis.title.x = element_blank()) +
+#   #   ggtitle("Annotation Support\n\n") 
+#   #p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
+#   #  geom_col(position='dodge', width = 0.7,  size=0.3, fill='lightblue', color="black") +
+#   #  geom_text(label=paste(round(t3.SJ$perc, 1),"%",sep=''), nudge_y=0.5) +
+#   #  scale_fill_manual(values = myPalette[11]) +
+#   #  ylab("Isoforms, %") +
+#   #  xlab("") +
+#   #  mytheme +
+#   #  theme(legend.position="bottom", axis.title.x = element_blank()) +
+#   #  ggtitle("Incidence of Non-Canonical Junctions\n\n") +
+#   #  guides(fill = guide_legend(title = "QC Attributes") )
 
-  p28.RTS <- ggplot(t3.RTS, aes(x=structural_category, y=perc)) +
-    geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[11], color="black") +
-    geom_text(label=paste(round(t3.RTS$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-    scale_fill_manual(values = myPalette[9:11]) +
-    scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-    ylab("Isoforms, %") +
-    xlab("") +
-    mytheme +
-    theme(legend.position="bottom", axis.title.x = element_blank()) +
-    ggtitle("RT-switching\n\n")
+#   p28.RTS <- ggplot(t3.RTS, aes(x=structural_category, y=perc)) +
+#     geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[11], color="black") +
+#     geom_text(label=paste(round(t3.RTS$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#     scale_fill_manual(values = myPalette[9:11]) +
+#     scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#     ylab("Isoforms, %") +
+#     xlab("") +
+#     mytheme +
+#     theme(legend.position="bottom", axis.title.x = element_blank()) +
+#     ggtitle("RT-switching\n\n")
 
-  p28.SJ <- ggplot(t3.SJ, aes(x=structural_category, y=perc)) +
-    geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[9] ,color="black") +
-    geom_text(label=paste(round(t3.SJ$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
-    scale_fill_manual(values = myPalette[9:11]) +
-    scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-    ylab("Isoforms, %") +
-    xlab("") +
-    mytheme +
-    theme(legend.position="bottom", axis.title.x = element_blank()) +
-    ggtitle("Non-Canonical Junctions\n\n")
-  p28.a.SJ <- ggplot(t3.a.SJ, aes(x=structural_category, y=perc)) +
-    geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[7] ,color="black") +
-    geom_text(label=paste(round(t3.a.SJ$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
-    scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-    ylab("Isoforms, %") +
-    xlab("") +
-    mytheme +
-    theme(legend.position="bottom", axis.title.x = element_blank()) +
-    ggtitle("All Canonical Junctions\n\n")
+#   p28.SJ <- ggplot(t3.SJ, aes(x=structural_category, y=perc)) +
+#     geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[9] ,color="black") +
+#     geom_text(label=paste(round(t3.SJ$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
+#     scale_fill_manual(values = myPalette[9:11]) +
+#     scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#     ylab("Isoforms, %") +
+#     xlab("") +
+#     mytheme +
+#     theme(legend.position="bottom", axis.title.x = element_blank()) +
+#     ggtitle("Non-Canonical Junctions\n\n")
+#   p28.a.SJ <- ggplot(t3.a.SJ, aes(x=structural_category, y=perc)) +
+#     geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[7] ,color="black") +
+#     geom_text(label=paste(round(t3.a.SJ$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) + 
+#     scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#     ylab("Isoforms, %") +
+#     xlab("") +
+#     mytheme +
+#     theme(legend.position="bottom", axis.title.x = element_blank()) +
+#     ggtitle("All Canonical Junctions\n\n")
 
-  if (n_t3.SJ>0 & n_t3.RTS>0 & !all(is.na(x$min_cov)) & all(is.na(x$predicted_NMD))){
-    p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
-      geom_text(label=paste(round(t3.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Splice Junctions Without Short Reads Coverage\n\n")
-    p28.a.Cov <- ggplot(t3.a.Cov, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
-      geom_text(label=paste(round(t3.a.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Splice Junctions With Short Reads Coverage\n\n") 
+#   if (n_t3.SJ>0 & n_t3.RTS>0 & !all(is.na(x$min_cov)) & all(is.na(x$predicted_NMD))){
+#     p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
+#       geom_text(label=paste(round(t3.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Splice Junctions Without Short Reads Coverage\n\n")
+#     p28.a.Cov <- ggplot(t3.a.Cov, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
+#       geom_text(label=paste(round(t3.a.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Splice Junctions With Short Reads Coverage\n\n") 
 
 
-    t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)], t3.Cov[,c(1,5,6)])
+#     t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)], t3.Cov[,c(1,5,6)])
 
-    p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
-      geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Transcripts, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle( "Summary Features of Bad Quality\n\n" ) +
-      theme(legend.title = element_blank())
+#     p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
+#       geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Transcripts, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle( "Summary Features of Bad Quality\n\n" ) +
+#       theme(legend.title = element_blank())
     
-    #good quality control
-    # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)], t3.a.Cov[,c(1,5,6)])
+#     #good quality control
+#     # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)], t3.a.Cov[,c(1,5,6)])
 
-  }else if (n_t3.SJ>0 & n_t3.RTS>0 & all(is.na(x$min_cov)) & all(is.na(x$predicted_NMD))) {
-    t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)])
-    p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
-      geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
-      scale_fill_manual(values = myPalette[c(9,11)]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Transcripts, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
-      theme(legend.title = element_blank())
-    #good quality control
-    # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)])
+#   }else if (n_t3.SJ>0 & n_t3.RTS>0 & all(is.na(x$min_cov)) & all(is.na(x$predicted_NMD))) {
+#     t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)])
+#     p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
+#       geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
+#       scale_fill_manual(values = myPalette[c(9,11)]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Transcripts, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
+#       theme(legend.title = element_blank())
+#     #good quality control
+#     # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)])
 
-  }else if (n_t3.SJ>0 & n_t3.RTS>0 & all(is.na(x$min_cov)) & !all(is.na(x$predicted_NMD))){
-    p28.NMD <- ggplot(t3.NMD, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[5], color="black") +
-      geom_text(label=paste(round(t3.NMD$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Nonsense-Mediated Decay by Structural Category\n\n")
-    t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)], t3.NMD[,c(1,5,6)])
-    p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
-      geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
-      scale_fill_manual(values = myPalette[c(9,5,11)]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Transcripts, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
-      theme(legend.title = element_blank())
-    #good quality control
-    # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)])
+#   }else if (n_t3.SJ>0 & n_t3.RTS>0 & all(is.na(x$min_cov)) & !all(is.na(x$predicted_NMD))){
+#     p28.NMD <- ggplot(t3.NMD, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[5], color="black") +
+#       geom_text(label=paste(round(t3.NMD$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Nonsense-Mediated Decay by Structural Category\n\n")
+#     t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)], t3.NMD[,c(1,5,6)])
+#     p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
+#       geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
+#       scale_fill_manual(values = myPalette[c(9,5,11)]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Transcripts, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
+#       theme(legend.title = element_blank())
+#     #good quality control
+#     # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)])
   
-  }else if (n_t3.SJ>0 & n_t3.RTS>0) {
-    p28.NMD <- ggplot(t3.NMD, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[5], color="black") +
-      geom_text(label=paste(round(t3.NMD$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Nonsense-Mediated Decay by Structural Category\n\n")
-    p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
-      geom_text(label=paste(round(t3.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Splice Junctions Without Short Read Coverage\n\n")
-    p28.a.Cov <- ggplot(t3.a.Cov, aes(x=structural_category, y=perc)) +
-      geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
-      geom_text(label=paste(round(t3.a.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
-      scale_fill_manual(values = myPalette[9:11]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Isoforms, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle("Splice Junctions With Short Read Coverage\n\n")
-    t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)],t3.Cov[,c(1,5,6)], t3.NMD[,c(1,5,6)])
-    p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
-      geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
-      scale_fill_manual(values = myPalette[c(9,10,5,11)]) +
-      scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-      ylab("Transcripts, %") +
-      xlab("") +
-      mytheme +
-      theme(legend.position="bottom", axis.title.x = element_blank()) +
-      ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
-      theme(legend.title = element_blank())
-    #good quality control
-    # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)], t3.a.Cov[,c(1,5,6)])
+#   }else if (n_t3.SJ>0 & n_t3.RTS>0) {
+#     p28.NMD <- ggplot(t3.NMD, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[5], color="black") +
+#       geom_text(label=paste(round(t3.NMD$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Nonsense-Mediated Decay by Structural Category\n\n")
+#     p28.Cov <- ggplot(t3.Cov, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
+#       geom_text(label=paste(round(t3.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Splice Junctions Without Short Read Coverage\n\n")
+#     p28.a.Cov <- ggplot(t3.a.Cov, aes(x=structural_category, y=perc)) +
+#       geom_col(position='dodge', width = 0.7,  size=0.3, fill=myPalette[10], color="black") +
+#       geom_text(label=paste(round(t3.a.Cov$perc, 1),"%",sep=''), position = position_dodge(0.9),vjust = -0.8) +
+#       scale_fill_manual(values = myPalette[9:11]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Isoforms, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle("Splice Junctions With Short Read Coverage\n\n")
+#     t3=rbind(t3.RTS[,c(1,5,6)],t3.SJ[,c(1,5,6)],t3.Cov[,c(1,5,6)], t3.NMD[,c(1,5,6)])
+#     p28 <- ggplot(data=t3, aes(x=structural_category, y=perc, fill= Var)) +
+#       geom_bar(position = position_dodge(), stat="identity", width = 0.7,  size=0.3, color="black") +
+#       scale_fill_manual(values = myPalette[c(9,10,5,11)]) +
+#       scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#       ylab("Transcripts, %") +
+#       xlab("") +
+#       mytheme +
+#       theme(legend.position="bottom", axis.title.x = element_blank()) +
+#       ggtitle( "Quality Control Attributes Across Structural Categories\n\n" ) +
+#       theme(legend.title = element_blank())
+#     #good quality control
+#     # t3.a=rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)], t3.a.Cov[,c(1,5,6)])
     
-  }
+#   }
 
-}
+# }
 # t3.aa = rbind(t3.annot[,c(1,5,6)], t3.a.SJ[,c(1,5,6)])
 
 # for(i in 1:length(t3.list)){
@@ -2189,24 +2189,24 @@ if (nrow(data.junction) > 0){
 
 
 #TSS ratio
-data.ratio = rbind(data.refmatch[,c(6,47)], data.ISM[,c(6,47)])
-if (!all(is.na(data.ratio$ratio_TSS))){
-  require(scales)
-  p28.a.ratio=ggplot(data.ratio, aes(x=ratio_TSS, fill=structural_category)) + 
-    geom_density(alpha=0.6)+
-    labs(x="TSS ratio, log2", y="Density", title="TSS Ratio\n\nFSM Reference Match vs ISM\n\n") +
-    scale_fill_manual(values = myPalette, breaks=c("FSM", "ISM"),
-                      labels=c("FSM reference match", "ISM"), drop=F)+
-    geom_vline(xintercept=1, linetype="dashed", color = "red")+
-    scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
-    mytheme +
-    theme(legend.position="bottom", legend.title = element_blank())
-  p28.a.ratio.pdf <- p28.a.ratio + 
-    scale_x_continuous(trans='log2', breaks = trans_breaks("log2", function(x) 2^x),
-                                                      labels = trans_format("log2", math_format(2^.x)))
-  p28.a.ratio.html <- p28.a.ratio + 
-    scale_x_continuous(trans='log2')
-}
+# data.ratio = rbind(data.refmatch[,c(6,47)], data.ISM[,c(6,47)])
+# if (!all(is.na(data.ratio$ratio_TSS))){
+#   require(scales)
+#   p28.a.ratio=ggplot(data.ratio, aes(x=ratio_TSS, fill=structural_category)) + 
+#     geom_density(alpha=0.6)+
+#     labs(x="TSS ratio, log2", y="Density", title="TSS Ratio\n\nFSM Reference Match vs ISM\n\n") +
+#     scale_fill_manual(values = myPalette, breaks=c("FSM", "ISM"),
+#                       labels=c("FSM reference match", "ISM"), drop=F)+
+#     geom_vline(xintercept=1, linetype="dashed", color = "red")+
+#     scale_y_continuous(expand = expansion(mult = c(0,0.1))) +
+#     mytheme +
+#     theme(legend.position="bottom", legend.title = element_blank())
+#   p28.a.ratio.pdf <- p28.a.ratio + 
+#     scale_x_continuous(trans='log2', breaks = trans_breaks("log2", function(x) 2^x),
+#                                                       labels = trans_format("log2", math_format(2^.x)))
+#   p28.a.ratio.html <- p28.a.ratio + 
+#     scale_x_continuous(trans='log2')
+# }
 
 # PLOT p30,p31,p32: percA by subcategory
 
