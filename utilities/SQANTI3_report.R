@@ -144,17 +144,17 @@ STM_function <- function(x){
   ref_TSS <- FALSE
   ref_TTS <- FALSE
   
-  if (!is.na(x["diff_to_gene_TSS"])){
-    if (abs(as.numeric(x["diff_to_gene_TSS"]))<=50){
-      ref_TSS <- TRUE
-    }
-  }
+  # if (!is.na(x["diff_to_gene_TSS"])){
+  #   if (abs(as.numeric(x["diff_to_gene_TSS"]))<=50){
+  #     ref_TSS <- TRUE
+  #   }
+  # }
   
-  if (!is.na(x["diff_to_gene_TTS"])){
-    if (abs(as.numeric(x["diff_to_gene_TTS"]))<=50){
-      ref_TTS <- TRUE
-    }
-  }
+  # if (!is.na(x["diff_to_gene_TTS"])){
+  #   if (abs(as.numeric(x["diff_to_gene_TTS"]))<=50){
+  #     ref_TTS <- TRUE
+  #   }
+  # }
   
   w_cage <- !is.na(x["within_cage_peak"]) & x["within_cage_peak"]=="True"
   if ( ref_TSS | w_cage  ){
