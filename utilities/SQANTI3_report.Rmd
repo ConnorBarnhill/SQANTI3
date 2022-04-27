@@ -61,37 +61,6 @@ rownames(table3MD) <- NULL
 
 ### Comparison with Annotated TSS and TTS
 
-# Table: Number of PolyA Motifs Detected
-if (exists("df.polyA")) {
-    df.polyA_MD <- df.polyA
-    rownames(df.polyA_MD) <- NULL
-    colnames(df.polyA_MD) <- c("Category","Count","polyA\nDetected","%")
-}
-
-
-# Table: Frequency of polyA motifs
-if (exists("df.polyA_freq")) {
-  df.polyA_freq_MD <- df.polyA_freq
-  rownames(df.polyA_freq_MD) <- NULL
-  colnames(df.polyA_freq_MD) <- c("Motif", "Count", "%")
-}
-
-if (exists("df.polyA_subcat")) {
-  df.polyA_subcat_MD <- df.polyA_subcat
-  rownames(df.polyA_subcat_MD) <- NULL
-  colnames(df.polyA_subcat_MD) <- c("Category","Count","polyA\nDetected","%")
-}
-
-if (exists("df.cage")) {
-  df.cage_MD <- df.cage
-  rownames(df.cage_MD) <- NULL
-  colnames(df.cage_MD) <- c("Category","Count","CAGE\nDetected","%")
-}
-if (exists("df.cage_subc")) {
-  df.cage_subc_MD <- df.cage_subc
-  rownames(df.cage_subc_MD) <- NULL
-  colnames(df.cage_subc_MD) <- c("Subcategory","Count","CAGE\nDetected","%")
-}
 
 ## Figures
 ### P1
@@ -740,51 +709,6 @@ cat ('\n')
 
 ```
 
-```{r , eval = exists("df.polyA_MD")}
-cat ('\n###'," PolyA Distance Analysis by categories (table)", '\n')
-datatable(df.polyA_MD,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Number of PolyA Motifs Detected'))
-)
-
-datatable(df.polyA_freq,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Frequency of PolyA Motifs'))
-)
-```
-
-
-```{r, eval = exists("p.polyA_dist_subcat")}
-cat ('\n###',"PolyA Distance Analysis by subcategories", '\n')
-ggplotly(p.polyA_dist_subcat)%>%
-  layout(margin = list(r = 130))
-cat ('\n')
-
-ggplotly(p.polyA_dist_subcat.s2)
-
-```
-
-```{r, eval = exists("df.polyA_subcat_MD")}
-cat ('\n###',"PolyA Distance Analysis by subcategories (table)", '\n')
-datatable(df.polyA_subcat_MD,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Number of PolyA Motifs Detected'))
-)
-
-datatable(df.polyA_freq,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Frequency of PolyA Motifs'))
-)
-```
-
 
 <!--
 CAGE distances analysis
@@ -942,24 +866,6 @@ cat ('\n')
 
 ```
 
-
-```{r, eval = exists("df.cage_MD") || exists("df.cage_subc_MD")}
-cat ('\n###',"CAGE Detected (table) {.tabset .tabset-fade .tabset-dropdown}", '\n')
-datatable(df.cage_MD,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Number of CAGE Detected'))
-)
-
-datatable(df.cage_subc_MD,
-          options = list(dom = 't'),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: bottom; text-align: center;',
-            htmltools::em('Number of CAGE Detected'))
-)
-
-```
 
 
 <!--
