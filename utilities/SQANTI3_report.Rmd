@@ -1149,14 +1149,6 @@ ggplotly(p28.SJ)%>%
 cat ('\n')
 ```
 
-```{r ,eval= exists("p28.Cov")}
-cat("#### Splice Junctions Without Short Read Coverage",'\n')
-ggplotly(p28.Cov)%>%
-  layout(margin = list(r = 130)) %>%
-  style( textposition="none")
-cat ('\n')
-```
-
 ```{r , eval=exists("p28.NMD")}
 cat("#### Nonsense-Mediated Decay by Structural Category",'\n')
 ggplotly(p28.NMD)%>%
@@ -1169,13 +1161,7 @@ cat ('\n')
 
 ### TSS and TTS Support Percentages {.tabset .tabset-fade .tabset-dropdown}
 
-```{r}
-cat("#### Annotation support", '\n') 
-ggplotly(p28.a.annot)%>%
-  layout(margin = list(r = 130))%>%
-  style(textposition="none") 
-cat ('\n')
-```
+
 
 ```{r, eval = exists("p28.a.Cage")}
 cat("#### CAGE Support", '\n') 
